@@ -16,7 +16,7 @@ A GPC resolve os dois problemas:
 | Nome | GitHub |
 |---|---|
 | Ryan Haiala | [@RyanHLA](https://github.com/RyanHLA) |
-| Tarcisio Muniz | |
+| Tarcisio Muniz |[@TarcisioMuniz7](https://github.com/TarcisioMuniz7) |
 | Mateus Pereira | [@Mateusjesper](https://github.com/Mateusjesper)|
 
 ## API externa: Open-Meteo
