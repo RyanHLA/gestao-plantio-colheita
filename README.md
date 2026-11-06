@@ -1,7 +1,5 @@
 # Gestão de Plantio e Colheita (GPC)
 
-API REST para pequenos e médios produtores rurais planejarem o plantio e a colheita das suas áreas.
-
 ## Problema
 
 O produtor rural decide a data de plantio com base na experiência e em previsões do tempo dispersas. Se ele planta sem chuva suficiente, a semente não germina bem e ele perde dinheiro. Além disso, muitos produtores não têm um registro organizado das suas áreas, das safras e da produção.
