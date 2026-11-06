@@ -79,19 +79,11 @@ Os diagramas estão no diretório [`/docs`](docs):
 
 ## Tecnologias
 
-- Java 21: É a linguagem de programação e plataforma principal do nosso projeto. Sendo uma versão de Suporte de Longo Prazo (LTS), ela traz recursos modernos que aumentam a produtividade e a eficiência, como:
-  • Virtual Threads: Permitem criar aplicações altamente escaláveis que processam milhões de requisições simultâneas com baixo consumo de memória.
-• Record Patterns & Pattern Matching: Sintaxe simplificada para desestruturar dados e fazer verificações de tipo mais limpas.
-• Sequenced Collections: Novas interfaces que facilitam o acesso ao primeiro e ao último elemento de coleções (como listas e conjuntos).
-
-- Spring Boot 4 (Web MVC, RestClient, Data JPA, Validation):É o framework principal que estrutura toda a aplicação. Ele elimina as configurações manuais complexas do Spring tradicional (através da autoconfiguração) e acelera o desenvolvimento de microsserviços e APIs prontas para produção.
-  
-- H2 (banco em memória, desenvolvimento):É um banco de dados relacional SQL muito leve que roda em memória. No ambiente de desenvolvimento, ele elimina a necessidade de instalar e configurar um banco pesado (como PostgreSQL ou MySQL). Toda vez que a aplicação é iniciada, o banco é criado do zero, tornando o ciclo de desenvolvimento rápido e isolado.
-
-- Maven (Maven Wrapper incluído): É a ferramenta de gerenciamento de dependências e automação do build do projeto. Ele lê o arquivo pom.xml para baixar todas as bibliotecas necessárias (Spring, H2, etc.) e compilar o código.
-- JUnit 5: É o framework padrão para a criação e execução de testes automatizados em Java. No ambiente Spring Boot, ele trabalha em conjunto com o Spring Boot Test para realizar desde testes unitários simples (testando métodos de serviços isolados) até testes de integração complexos (que sobem o contexto do Spring para testar a API de ponta a ponta).
-
-- Postman (testes da API): É uma ferramenta externa (software/aplicativo) para testar e documentar a API. Ele funciona como um cliente HTTP visual onde você pode disparar requisições (GET, POST, PUT, DELETE) para os endpoints criados no seu Spring Boot, enviar payloads JSON, inspecionar as respostas do servidor (Status Codes, Headers, Body) e criar coleções de testes manuais ou automatizados.
+- Java 21;
+- Spring Boot 4 (Web MVC, RestClient, Data JPA, Validation);
+- H2 (banco em memória, desenvolvimento);
+- Maven (Maven Wrapper incluído);
+- Postman (testes da API).
 
 ## Estrutura do código
 
