@@ -1,4 +1,4 @@
-package br.edu.ifbaiano.gpc.integration.openmeteo;
+package br.edu.ifbaiano.gpc.service;
 
 import br.edu.ifbaiano.gpc.dto.PrevisaoDiariaDTO;
 import org.springframework.beans.factory.annotation.Value;

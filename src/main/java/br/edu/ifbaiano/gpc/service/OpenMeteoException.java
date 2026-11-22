@@ -1,4 +1,4 @@
-package br.edu.ifbaiano.gpc.integration.openmeteo;
+package br.edu.ifbaiano.gpc.service;
 
 public class OpenMeteoException extends RuntimeException {
 

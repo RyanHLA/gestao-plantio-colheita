@@ -16,6 +16,9 @@
 	<url>https://github.com/RyanHLA/gestao-plantio-colheita</url>
 	<properties>
 		<java.version>21</java.version>
+		<!-- Testes que acessam a internet (Open-Meteo real) ficam fora do "mvnw test" padrão.
+		     Para rodá-los: mvnw test -Dgroups=integracao -DexcludedGroups= -->
+		<excludedGroups>integracao</excludedGroups>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -1,11 +1,12 @@
-package br.edu.ifbaiano.gpc.integration.openmeteo;
+package br.edu.ifbaiano.gpc.service;
 
 import br.edu.ifbaiano.gpc.dto.PrevisaoDiariaDTO;
 import br.edu.ifbaiano.gpc.dto.SugestaoPlantioDTO;
 import br.edu.ifbaiano.gpc.model.Cultura;
 import br.edu.ifbaiano.gpc.model.Talhao;
 import br.edu.ifbaiano.gpc.model.TipoSolo;
-import br.edu.ifbaiano.gpc.service.SugestaoPlantioService;
+import br.edu.ifbaiano.gpc.strategy.ChuvaAcumuladaStrategy;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;
 
@@ -20,7 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Teste isolado (sem subir o Spring) que demonstra a viabilidade do consumo
  * da API Open-Meteo. Faz uma requisição HTTP real: precisa de acesso à internet.
+ * Por isso fica fora do {@code mvnw test} padrão. Para rodar:
+ * {@code mvnw test -Dgroups=integracao -DexcludedGroups=}
  */
+@Tag("integracao")
 class OpenMeteoClientTest {
 
     // Campus Guanambi do IF Baiano
@@ -53,7 +57,8 @@ class OpenMeteoClientTest {
         Talhao talhao = new Talhao(1L, "Talhão Norte", 12.5, LATITUDE, LONGITUDE, TipoSolo.ARGILOSO);
         Cultura milho = new Cultura(1L, "Milho", "Zea mays", 120, 20.0, 10.0, 38.0, 6000);
 
-        SugestaoPlantioDTO sugestao = new SugestaoPlantioService(client).sugerir(talhao, milho);
+        SugestaoPlantioDTO sugestao = new SugestaoPlantioService(client, List.of(new ChuvaAcumuladaStrategy()))
+                .sugerir(talhao, milho, (String) null);
 
         assertNotNull(sugestao.justificativa());
         if (sugestao.encontrouData()) {

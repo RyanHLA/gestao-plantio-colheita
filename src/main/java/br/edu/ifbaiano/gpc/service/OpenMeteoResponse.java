@@ -1,4 +1,4 @@
-package br.edu.ifbaiano.gpc.integration.openmeteo;
+package br.edu.ifbaiano.gpc.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

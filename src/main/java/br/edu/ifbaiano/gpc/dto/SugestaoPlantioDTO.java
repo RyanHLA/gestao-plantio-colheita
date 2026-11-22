@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public record SugestaoPlantioDTO(
         String talhao,
         String cultura,
+        String estrategia,
         LocalDate dataPlantioSugerida,
         LocalDate dataColheitaPrevista,
         double chuvaAcumuladaJanelaMm,
