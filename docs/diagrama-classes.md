@@ -1,6 +1,6 @@
 # Diagrama de Classes
 
-Classes do modelo de domínio (`br.edu.ifbaiano.gpc.model`).
+Classes do modelo de domínio (`br.edu.ifbaiano.gpc.model`). Todas são entidades JPA.
 
 ```mermaid
 classDiagram
@@ -17,6 +17,7 @@ classDiagram
         -List~Talhao~ talhoes
         +adicionarTalhao(Talhao)
         +removerTalhao(Talhao)
+        +possuiTalhoes() boolean
         +getAreaTotalHectares() double
     }
 
@@ -30,7 +31,9 @@ classDiagram
         -Produtor produtor
         -List~Safra~ safras
         +adicionarSafra(Safra)
+        +removerSafra(Safra)
         +isOcupado() boolean
+        +possuiSafras() boolean
     }
 
     class Cultura {
@@ -43,6 +46,7 @@ classDiagram
         -double temperaturaMaximaC
         -double produtividadeEsperadaKgHa
         +isTemperaturaAdequada(double, double) boolean
+        +definirFaixaTemperatura(double, double)
     }
 
     class Safra {
@@ -59,6 +63,8 @@ classDiagram
         +plantar(LocalDate)
         +colher(LocalDate, double)
         +cancelar()
+        +trocarCultura(Cultura)
+        +isExcluivel() boolean
         +getProducaoEstimadaKg() double
         +isAtiva() boolean
     }
