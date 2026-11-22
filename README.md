@@ -238,13 +238,3 @@ Exemplo:
   "campos": null
 }
 ```
-
-## Status
-
-- [x] 1ª entrega (06/11): proposta, modelagem, POJOs e teste da API externa
-- [x] Entidades JPA e Repositories
-- [x] Controllers REST com DTOs
-- [x] Front Controller (filtro + tratamento global de exceções)
-- [x] Padrões GoF: Command e Strategy
-- [x] Coleção do Postman
-- [ ] Entrega final (27/11)
