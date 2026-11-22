@@ -1,5 +1,18 @@
 package br.edu.ifbaiano.gpc.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,16 +22,36 @@ import java.util.Objects;
  * Área delimitada da propriedade onde ocorre o plantio.
  * A latitude e a longitude são enviadas à API Open-Meteo para obter a previsão do tempo.
  */
+@Entity
+@Table(name = "talhao")
 public class Talhao {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 80)
     private String nome;
+
+    @Column(name = "area_hectares", nullable = false)
     private double areaHectares;
+
+    @Column(nullable = false)
     private double latitude;
+
+    @Column(nullable = false)
     private double longitude;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_solo", length = 20)
     private TipoSolo tipoSolo;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "produtor_id", nullable = false)
     private Produtor produtor;
-    private final List<Safra> safras = new ArrayList<>();
+
+    @OneToMany(mappedBy = "talhao")
+    private List<Safra> safras = new ArrayList<>();
 
     public Talhao() {
     }
@@ -27,7 +60,7 @@ public class Talhao {
                   double longitude, TipoSolo tipoSolo) {
         this.id = id;
         this.nome = nome;
-        this.areaHectares = areaHectares;
+        setAreaHectares(areaHectares);
         setLatitude(latitude);
         setLongitude(longitude);
         this.tipoSolo = tipoSolo;
@@ -41,9 +74,17 @@ public class Talhao {
         safra.setTalhao(this);
     }
 
+    public void removerSafra(Safra safra) {
+        safras.remove(safra);
+    }
+
     /** Indica se o talhão já tem uma safra planejada ou em andamento. */
     public boolean isOcupado() {
         return safras.stream().anyMatch(Safra::isAtiva);
+    }
+
+    public boolean possuiSafras() {
+        return !safras.isEmpty();
     }
 
     public Long getId() {
@@ -67,6 +108,9 @@ public class Talhao {
     }
 
     public void setAreaHectares(double areaHectares) {
+        if (areaHectares <= 0) {
+            throw new IllegalArgumentException("A área do talhão deve ser maior que zero");
+        }
         this.areaHectares = areaHectares;
     }
 
@@ -116,19 +160,18 @@ public class Talhao {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Talhao outro)) return false;
-        return id != null && id.equals(outro.id);
+        return id != null && id.equals(outro.getId());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Talhao.class.hashCode();
     }
 
     @Override
     public String toString() {
         return "Talhao{id=" + id + ", nome='" + nome + "', areaHectares=" + areaHectares
                 + ", latitude=" + latitude + ", longitude=" + longitude
-                + ", tipoSolo=" + tipoSolo
-                + ", produtorId=" + (produtor != null ? produtor.getId() : null) + "}";
+                + ", tipoSolo=" + tipoSolo + "}";
     }
 }

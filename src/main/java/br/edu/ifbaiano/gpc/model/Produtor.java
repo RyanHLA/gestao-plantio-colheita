@@ -1,5 +1,13 @@
 package br.edu.ifbaiano.gpc.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,16 +16,34 @@ import java.util.Objects;
 /**
  * Produtor rural dono de um ou mais talhões.
  */
+@Entity
+@Table(name = "produtor")
 public class Produtor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 120)
     private String nome;
+
+    @Column(name = "cpf_cnpj", nullable = false, unique = true, length = 18)
     private String cpfCnpj;
+
+    @Column(length = 120)
     private String email;
+
+    @Column(length = 20)
     private String telefone;
+
+    @Column(length = 80)
     private String municipio;
+
+    @Column(length = 2)
     private String uf;
-    private final List<Talhao> talhoes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "produtor")
+    private List<Talhao> talhoes = new ArrayList<>();
 
     public Produtor() {
     }
@@ -36,6 +62,9 @@ public class Produtor {
     /** Vincula o talhão a este produtor (mantém os dois lados da associação). */
     public void adicionarTalhao(Talhao talhao) {
         Objects.requireNonNull(talhao, "talhao");
+        if (talhao.getProdutor() != null && talhao.getProdutor() != this) {
+            talhao.getProdutor().removerTalhao(talhao);
+        }
         if (!talhoes.contains(talhao)) {
             talhoes.add(talhao);
         }
@@ -46,6 +75,10 @@ public class Produtor {
         if (talhoes.remove(talhao)) {
             talhao.setProdutor(null);
         }
+    }
+
+    public boolean possuiTalhoes() {
+        return !talhoes.isEmpty();
     }
 
     /** Soma das áreas de todos os talhões do produtor, em hectares. */
@@ -117,18 +150,17 @@ public class Produtor {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Produtor outro)) return false;
-        return id != null && id.equals(outro.id);
+        return id != null && id.equals(outro.getId());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Produtor.class.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Produtor{id=" + id + ", nome='" + nome + "', cpfCnpj='" + cpfCnpj
-                + "', municipio='" + municipio + "', uf='" + uf
-                + "', talhoes=" + talhoes.size() + "}";
+        return "Produtor{id=" + id + ", nome='" + nome + "', municipio='" + municipio
+                + "', uf='" + uf + "'}";
     }
 }
