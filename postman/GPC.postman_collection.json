@@ -1,0 +1,1810 @@
+{
+  "info": {
+    "_postman_id": "95964a06-c83b-45e0-a7e7-fa2a7294a371",
+    "name": "GPC - Gestão de Plantio e Colheita",
+    "description": "Coleção de testes da API GPC. Rode as pastas em ordem (Run collection): as requisições guardam os ids criados em variáveis da coleção.\n\nA chave da API (X-API-Key) está configurada na autorização da coleção e é exigida pelo Front Controller em POST, PUT e DELETE.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. Produtores",
+      "item": [
+        {
+          "name": "Cadastrar produtor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"produtorId\", pm.response.json().id); }",
+                  "pm.test(\"CPF sai mascarado (DTO)\", () => pm.expect(pm.response.json().cpfCnpj).to.eql(\"123.***.***-00\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produtores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ryan Haiala\",\n  \"cpfCnpj\": \"123.456.789-00\",\n  \"email\": \"ryan@email.com\",\n  \"telefone\": \"(77) 99999-0000\",\n  \"municipio\": \"Guanambi\",\n  \"uf\": \"BA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar produtores",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar produtor por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/{{produtorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "{{produtorId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Alterar produtor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"Telefone alterado\", () => pm.expect(pm.response.json().telefone).to.eql(\"(77) 98888-1111\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/{{produtorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "{{produtorId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ryan Haiala\",\n  \"cpfCnpj\": \"123.456.789-00\",\n  \"email\": \"ryan@email.com\",\n  \"telefone\": \"(77) 98888-1111\",\n  \"municipio\": \"Guanambi\",\n  \"uf\": \"BA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Culturas",
+      "item": [
+        {
+          "name": "Cadastrar cultura - Milho",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"culturaMilhoId\", pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/culturas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Milho\",\n  \"nomeCientifico\": \"Zea mays\",\n  \"cicloDias\": 120,\n  \"chuvaMinimaPlantioMm\": 20,\n  \"temperaturaMinimaC\": 10,\n  \"temperaturaMaximaC\": 38,\n  \"produtividadeEsperadaKgHa\": 6000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cadastrar cultura - Feijão",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"culturaFeijaoId\", pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/culturas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Feijão\",\n  \"nomeCientifico\": \"Phaseolus vulgaris\",\n  \"cicloDias\": 90,\n  \"chuvaMinimaPlantioMm\": 15,\n  \"temperaturaMinimaC\": 12,\n  \"temperaturaMaximaC\": 32,\n  \"produtividadeEsperadaKgHa\": 1800\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar culturas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/culturas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar cultura por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/culturas/{{culturaFeijaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas",
+                "{{culturaFeijaoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Alterar cultura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/culturas/{{culturaFeijaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas",
+                "{{culturaFeijaoId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Feijão\",\n  \"nomeCientifico\": \"Phaseolus vulgaris\",\n  \"cicloDias\": 90,\n  \"chuvaMinimaPlantioMm\": 15,\n  \"temperaturaMinimaC\": 12,\n  \"temperaturaMaximaC\": 32,\n  \"produtividadeEsperadaKgHa\": 2000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Talhões",
+      "item": [
+        {
+          "name": "Cadastrar talhão",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"talhaoId\", pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtorId\": {{produtorId}},\n  \"nome\": \"Talhão Norte\",\n  \"areaHectares\": 12.5,\n  \"latitude\": -14.2233,\n  \"longitude\": -42.7814,\n  \"tipoSolo\": \"ARGILOSO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar talhões",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar talhão por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes/{{talhaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes",
+                "{{talhaoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Alterar talhão",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes/{{talhaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes",
+                "{{talhaoId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtorId\": {{produtorId}},\n  \"nome\": \"Talhão Norte\",\n  \"areaHectares\": 15,\n  \"latitude\": -14.2233,\n  \"longitude\": -42.7814,\n  \"tipoSolo\": \"ARGILOSO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Talhões do produtor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/{{produtorId}}/talhoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "{{produtorId}}",
+                "talhoes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Previsão do tempo de 16 dias (Open-Meteo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"16 dias de previsão\", () => pm.expect(pm.response.json().length).to.eql(16));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes/{{talhaoId}}/previsao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes",
+                "{{talhaoId}}",
+                "previsao"
+              ]
+            },
+            "description": "RF05. Precisa de internet. Sem acesso à Open-Meteo a API responde 502."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Safras (Command + Strategy)",
+      "item": [
+        {
+          "name": "Estratégias de sugestão disponíveis",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/estrategias-sugestao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "estrategias-sugestao"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Planejar safra",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"safraId\", pm.response.json().id); }",
+                  "pm.test(\"Nasce PLANEJADA\", () => pm.expect(pm.response.json().status).to.eql(\"PLANEJADA\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"talhaoId\": {{talhaoId}},\n  \"culturaId\": {{culturaMilhoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Trocar cultura da safra planejada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"Cultura trocada\", () => pm.expect(pm.response.json().culturaNome).to.eql(\"Feijão\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"talhaoId\": {{talhaoId}},\n  \"culturaId\": {{culturaFeijaoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Sugerir plantio - estratégia padrão",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"Estratégia chuva-acumulada\", () => pm.expect(pm.response.json().estrategia).to.eql(\"chuva-acumulada\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}/sugestao-plantio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}",
+                "sugestao-plantio"
+              ]
+            },
+            "description": "Comando SUGERIR_PLANTIO. Precisa de internet (Open-Meteo)."
+          }
+        },
+        {
+          "name": "Sugerir plantio - estratégia chuva-provavel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"Estratégia chuva-provavel\", () => pm.expect(pm.response.json().estrategia).to.eql(\"chuva-provavel\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}/sugestao-plantio?estrategia=chuva-provavel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}",
+                "sugestao-plantio"
+              ],
+              "query": [
+                {
+                  "key": "estrategia",
+                  "value": "chuva-provavel"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar plantio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"PLANTADA e colheita recalculada\", () => { const s = pm.response.json(); pm.expect(s.status).to.eql(\"PLANTADA\"); pm.expect(s.dataColheitaPrevista).to.eql(\"2027-02-18\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}/plantio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}",
+                "plantio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataPlantio\": \"2026-11-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registrar colheita",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"COLHIDA\", () => pm.expect(pm.response.json().status).to.eql(\"COLHIDA\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}/colheita",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}",
+                "colheita"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataColheita\": \"2027-02-20\",\n  \"producaoKg\": 29500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buscar safra por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar safras",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar safras por status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras?status=COLHIDA",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "COLHIDA"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Safras do talhão",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes/{{talhaoId}}/safras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes",
+                "{{talhaoId}}",
+                "safras"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Safras do produtor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/{{produtorId}}/safras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "{{produtorId}}",
+                "safras"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Histórico de comandos executados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/comandos/historico",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "comandos",
+                "historico"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Erros tratados pelo Front Controller",
+      "item": [
+        {
+          "name": "401 - Escrita sem X-API-Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(401); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/culturas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Milho\",\n  \"nomeCientifico\": \"Zea mays\",\n  \"cicloDias\": 120,\n  \"chuvaMinimaPlantioMm\": 20,\n  \"temperaturaMinimaC\": 10,\n  \"temperaturaMaximaC\": 38,\n  \"produtividadeEsperadaKgHa\": 6000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "404 - Produtor inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(404); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "404 - Rota inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(404); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rota-que-nao-existe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rota-que-nao-existe"
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - Dados inválidos (Bean Validation)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(400); pm.expect(j.mensagem).to.be.a(\"string\"); });",
+                  "pm.test(\"Lista os campos com erro\", () => pm.expect(pm.response.json().campos).to.have.property(\"nome\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/culturas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"\",\n  \"cicloDias\": -5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "400 - Temperatura mínima maior que a máxima",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(400); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/culturas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Soja\",\n  \"nomeCientifico\": \"Zea mays\",\n  \"cicloDias\": 120,\n  \"chuvaMinimaPlantioMm\": 20,\n  \"temperaturaMinimaC\": 35,\n  \"temperaturaMaximaC\": 20,\n  \"produtividadeEsperadaKgHa\": 6000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "400 - Status inválido no filtro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(400); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras?status=XYZ",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "XYZ"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "400 - Estratégia desconhecida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(400); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}/sugestao-plantio?estrategia=adivinhacao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}",
+                "sugestao-plantio"
+              ],
+              "query": [
+                {
+                  "key": "estrategia",
+                  "value": "adivinhacao"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "409 - CPF duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(409); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produtores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ryan Haiala\",\n  \"cpfCnpj\": \"123.456.789-00\",\n  \"email\": \"ryan@email.com\",\n  \"telefone\": \"(77) 99999-0000\",\n  \"municipio\": \"Guanambi\",\n  \"uf\": \"BA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Planejar 2ª safra no talhão (talhão livre após colheita)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"safra2Id\", pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"talhaoId\": {{talhaoId}},\n  \"culturaId\": {{culturaMilhoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "409 - Duas safras ativas no mesmo talhão (RF12)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(409); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"talhaoId\": {{talhaoId}},\n  \"culturaId\": {{culturaMilhoId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "409 - Colher safra que não foi plantada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(409); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safra2Id}}/colheita",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safra2Id}}",
+                "colheita"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataColheita\": \"2027-03-01\",\n  \"producaoKg\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "409 - Excluir produtor com talhões",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(409); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/{{produtorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "{{produtorId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "409 - Excluir safra já colhida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"Erro padronizado pelo Front Controller\", () => { const j = pm.response.json(); pm.expect(j.status).to.eql(409); pm.expect(j.mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safraId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safraId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Exclusões",
+      "item": [
+        {
+          "name": "Cancelar 2ª safra",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "pm.test(\"CANCELADA\", () => pm.expect(pm.response.json().status).to.eql(\"CANCELADA\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safra2Id}}/cancelamento",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safra2Id}}",
+                "cancelamento"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir safra cancelada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/safras/{{safra2Id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "safras",
+                "{{safra2Id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir cultura sem safras (Milho)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/culturas/{{culturaMilhoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "culturas",
+                "{{culturaMilhoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cadastrar produtor temporário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"produtorTempId\", pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produtores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Produtor Temporário\",\n  \"cpfCnpj\": \"987.654.321-00\",\n  \"email\": \"ryan@email.com\",\n  \"telefone\": \"(77) 99999-0000\",\n  \"municipio\": \"Guanambi\",\n  \"uf\": \"BA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cadastrar talhão temporário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Resposta em JSON\", () => pm.response.to.be.json);",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set(\"talhaoTempId\", pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtorId\": {{produtorTempId}},\n  \"nome\": \"Talhão Temporário\",\n  \"areaHectares\": 12.5,\n  \"latitude\": -14.2233,\n  \"longitude\": -42.7814,\n  \"tipoSolo\": \"ARGILOSO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Excluir talhão sem safras",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/talhoes/{{talhaoTempId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "talhoes",
+                "{{talhaoTempId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir produtor sem talhões",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produtores/{{produtorTempId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produtores",
+                "{{produtorTempId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "apiKey",
+      "value": "gpc-ifbaiano-2026"
+    },
+    {
+      "key": "produtorId",
+      "value": ""
+    },
+    {
+      "key": "culturaMilhoId",
+      "value": ""
+    },
+    {
+      "key": "culturaFeijaoId",
+      "value": ""
+    },
+    {
+      "key": "talhaoId",
+      "value": ""
+    },
+    {
+      "key": "safraId",
+      "value": ""
+    },
+    {
+      "key": "safra2Id",
+      "value": ""
+    },
+    {
+      "key": "produtorTempId",
+      "value": ""
+    },
+    {
+      "key": "talhaoTempId",
+      "value": ""
+    }
+  ]
+}
