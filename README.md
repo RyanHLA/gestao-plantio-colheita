@@ -129,7 +129,7 @@ São 8 pastas no mesmo nível, sem subpastas. Cada padrão do enunciado tem uma 
 
 - Java 21;
 - Spring Boot 4 (Web MVC, RestClient, Data JPA, Validation);
-- H2 (banco em memória);
+- H2 (banco de dados persistente em arquivo);
 - Maven (Maven Wrapper incluído);
 - JUnit 5;
 - Postman (testes da API).
@@ -146,7 +146,8 @@ mvnw.cmd spring-boot:run
 ./mvnw spring-boot:run
 ```
 
-A API sobe em `http://localhost:8080`. O banco H2 é em memória: os dados são apagados quando a aplicação para. O console do H2 fica em `http://localhost:8080/h2-console` (JDBC URL `jdbc:h2:mem:gpc`, usuário `sa`, sem senha).
+A API sobe em `http://localhost:8080`. O banco H2 é persistente: os dados são armazenados na pasta `data/` e preservados mesmo após o encerramento da aplicação. O console do H2 fica em `http://localhost:8080/h2-console` (JDBC URL `jdbc:h2:file:./data/gpc`, usuário `sa`, sem senha).
+
 
 ### Autenticação
 

@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Banco de dados H2 persistente
+/data/
